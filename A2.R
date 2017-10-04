@@ -34,11 +34,31 @@ data3<- data3[data3$Trophic!="--", ]
 data3$Trophic <- factor(data3$Trophic)
 
 
+pdf("GM_normal_LT.pdf", width=12, height=12)
+
+par(mfrow=c(2,2), pty="s")
+for(ll in c("H", "T", "M")){
+  a <- shapiro.test(data3$ppm[data3$Location==ll])
+  resultO<- aov(ppm ~ Trophic, data=data3[data3$Location==ll, ] )
+  plot(resultO, which=2, main=ll)
+}
+par(mfrow=c(2,2), pty="s")
+for(tt in 1:3){
+  # a <- shapiro.test(data3$ppm[data3$Location==ll])
+  resultO<- aov(ppm ~ Location, data=data3[data3$Trophic==tt, ] )
+  plot(resultO, which=2, main=tt)
+}
+dev.off()
+
 
 # resultByT[[t]]<- aov(ppm ~ locations, data[data$TROFICO==t,])
 pdf("GM_normal.pdf", width=8.5, height=11)
+
+# plot(a)
+
 shapiro.test(log(data3$ppm))
 st<- shapiro.test(data3$ppm)
+
 par(mfrow=c(2,1))
 resultO<- aov(ppm ~ Location*Trophic, data=data3)
 result<- aov(log(ppm) ~ Location*Trophic, data=data3)
