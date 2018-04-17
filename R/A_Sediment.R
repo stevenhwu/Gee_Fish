@@ -1,4 +1,60 @@
-data <- read.csv("AllData2-CSV.csv")
+library(RColorBrewer)
+cPal <- brewer.pal(8, "Dark2")
+
+data <- read.csv("sedimentdata.csv")
+
+
+summary(data)
+result <- aov(Hgnorm ~ River*Season, data=data)
+summary(result)
+TukeyHSD(result, "River")
+
+
+table(data$River, data$Season)
+data$RS <- interaction(data$River, data$Season)
+# plot.default(data$RS, Hgnorm ~ RS, data=data, type="p")
+plot(Hgnorm ~ RS, data=data)
+# data$River <- factor()
+
+png("Hg_RS.png", width=1000, height=1000)
+par(mar=c(5,4,0.5,0.5), cex=2)
+plot.default(data$River, data$Hgnorm, col=cPal[data$Season], ylab="Hg concentrations", xlab="River", xaxt="n", cex=1.5)
+axis(1, at=1:3, levels(data$River))
+legend("topright", legend=levels(data$Season), fill=cPal[1:2], bty="n")
+dev.off()
+# Method
+# Two-way ANOVA are used to test Hg concentrations between two factors, these are seasons and rivers. Tukey HSD were used to perform pairwise comparision between three rivers.
+# Result
+# ANOVA result showed that there are no evidence of interaction between river and season (p-value=0.491). Hence we can inteprete these two factors from the ANOVA table. Both factors are significant (season p-value < 0.001, river p-value=0.01). Tukey HSD showed that there is significant difference between M and H, but not significant between other pairwise comparisions.
+
+# For your reference
+# ANOVA Table
+Df Sum Sq Mean Sq F value   Pr(>F)
+River         2  71.80   35.90   7.118 0.010390 *
+Season        1 105.88  105.88  20.991 0.000788 ***
+River:Season  2   7.66    3.83   0.759 0.491160
+Residuals    11  55.48    5.04
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+# Tukey HSD table
+$River
+         diff       lwr      upr     p adj
+M-H  4.706667  1.331973 8.081360 0.0080421
+T-H  1.897500 -1.904435 5.699435 0.3996668
+T-M -2.809167 -6.724617 1.106284 0.1742488
+
+
+
+
+
+
+
+
+
+
+
+
 
 names(data)[grep("Total.Hg.Wet..ppm.", names(data))] <- "ppm"
 names(data)[grep("TROPHIC.LEVEL", names(data))] <- "TROPHIC"
