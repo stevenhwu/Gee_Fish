@@ -18,7 +18,7 @@ plot(Hgnorm ~ RS, data=data)
 
 png("Hg_RS.png", width=1000, height=1000)
 par(mar=c(5,4,0.5,0.5), cex=2)
-plot.default(data$River, data$Hgnorm, col=cPal[data$Season], ylab="Hg concentrations", xlab="River", xaxt="n", cex=1.5)
+plot.default(data$River, data$Hgnorm, col=cPal[data$Season], ylab="Total Hg (mg/kg)", xlab="River", xaxt="n", cex=1.5)
 axis(1, at=1:3, levels(data$River))
 legend("topright", legend=levels(data$Season), fill=cPal[1:2], bty="n")
 dev.off()
