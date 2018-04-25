@@ -53,3 +53,24 @@ cat(a$coefficients[2, c(1,4)], fill=T)
 a<- summary(glm(ppm~RTP + RTP:River + RTP:Season + (River+Season)^2, data=data))
 a
 cat(a$coefficients[2, c(1,4)], fill=T)
+
+
+
+
+
+
+sData<- list()
+bData<- list()
+mm <- median(data$RTP, na.rm=T)
+for(r in levels(data$River)){
+  subData <- data[data$River==r,]
+  a<- summary(glm(ppm~RTP, data=subData))
+  sData[[r]] <- subData$ppm + (mm - subData$RTP) * a$coefficients[2, 1]
+  
+}
+png("RTS_Median.png")
+boxplot(sData, ylab="log Total Hg (mg/kg)")
+dev.off()
+
+
+sapply(sData, function(x){boxplot.stats(x)$stats})
