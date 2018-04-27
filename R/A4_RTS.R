@@ -74,3 +74,13 @@ dev.off()
 
 
 sapply(sData, function(x){boxplot.stats(x)$stats})
+
+sapply(sData, function(x){mean(x, na.rm=T)})
+sapply(sData, function(x){median(x, na.rm=T)})
+
+
+rr <- factor(rep(names(sData), sapply(sData, length)), names(sData))
+d2<- data.frame(ppm=unlist(sData), River=rr)
+r <- aov(ppm~River, data=d2)
+summary(r)
+TukeyHSD(r)
