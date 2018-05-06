@@ -84,3 +84,27 @@ d2<- data.frame(ppm=unlist(sData), River=rr)
 r <- aov(ppm~River, data=d2)
 summary(r)
 TukeyHSD(r)
+
+
+
+for(r in levels(data$River)){
+  subData <- data[data$River==r,]
+  # hist(subData$RTP, breaks=20, xlim=c(0,4))
+  plot(sort(subData$RTP))
+  abline(h=1.5,col=2)
+  abline(h=2,col=3)
+}
+
+
+rr <-  levels(data$River)
+  subData <- data[data$River==rr[1],]
+  plot(sort(subData$RTP), ylim=c(0,4), type="o", col=1)
+
+  subData <- data[data$River==rr[2],]
+  points(sort(subData$RTP), ylim=c(0,4), type="o", col=2)
+  subData <- data[data$River==rr[3],]
+  points(sort(subData$RTP), ylim=c(0,4), type="o", col=3)
+
+  abline(h=1.5,col=2)
+  abline(h=2,col=3)
+}
