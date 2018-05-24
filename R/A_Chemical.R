@@ -23,6 +23,15 @@ for(r in c("pH", "Temp", "Conduct.", "DO", "Nitrate",
 }
 
 
+summary(data)
+cat("", file="PhysiSummary2.txt")
+for(r in c("pH", "Temp", "Conduct.", "DO", "Nitrate",
+"Turbidity")){
+  result <- aov(formula(paste(r, " ~ River + M.T + Season")) , data=data)
+  cat(r, capture.output(summary(result)), "\n", sep="\n", file="PhysiSummary2.txt", append=T)
+  cat(capture.output(TukeyHSD(result, "River")), sep="\n", file="PhysiSummary2.txt", append=T)
+}
+
 
 r <- "Turbidity"
 
