@@ -108,3 +108,13 @@ rr <-  levels(data$River)
   abline(h=1.5,col=2)
   abline(h=2,col=3)
 }
+
+
+names(data)
+rr <- lm(ppm ~ RTP, data=data)
+a[[1]]
+data$hgNorm <- a[[1]]["(Intercept)"]  + a[[1]]["RTP"] * (2.3 - data$RTP)
+rr <- aov(hgNorm ~  River, data=data)
+summary(rr)
+TukeyHSD(rr, "River")
+plot(hgNorm ~ River, data=data)
