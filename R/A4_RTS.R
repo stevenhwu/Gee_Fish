@@ -13,6 +13,7 @@ data[,"River"] <- factor(data[,"River"], levels=c("Tambopata", "Malinowski", "He
 
 table(data$River, data$RiverShort)
 
+
 plot(ppm~RTP, data=data, col=data$River)
 
 png("RTP_River.png", width=800, height=800)
@@ -118,3 +119,10 @@ rr <- aov(hgNorm ~  River, data=data)
 summary(rr)
 TukeyHSD(rr, "River")
 plot(hgNorm ~ River, data=data)
+
+
+## Correlation N vs log(ppm)
+library(RColorBrewer)
+cPal <- brewer.pal(8, "Set2")
+plot(ppm~d15N, col=cPal[data$River], data=(data), ylab="log THg (mg/kg)")
+legend("topleft", fill=cPal[1:3], legend =levels(data$River), bty="n")
