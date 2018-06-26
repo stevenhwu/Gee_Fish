@@ -66,9 +66,20 @@ mm <- median(data$RTP, na.rm=T)
 for(r in levels(data$River)){
   subData <- data[data$River==r,]
   a<- summary(glm(ppm~RTP, data=subData))
-  sData[[r]] <- subData$ppm + (mm - subData$RTP) * a$coefficients[2, 1]
+  sData[[r]] <- cbind(normHg=subData$ppm + (mm - subData$RTP) * a$coefficients[2, 1],
+                      subData[, c("River", "RTP", "STRD..LENGTH..mm.", "Season")])
   
 }
+
+data2<- do.call(rbind, sData)
+r <- aov(normHg ~ River + RTP + Season + STRD..LENGTH..mm., data=data2)
+summary(r)
+TukeyHSD(r, "River")
+
+
+
+
+# sData with ppm only
 png("RTS_Median.png")
 boxplot(sData, ylab="log Total Hg (mg/kg)")
 dev.off()
@@ -76,11 +87,12 @@ dev.off()
 
 sapply(sData, function(x){boxplot.stats(x)$stats})
 
-sapply(sData, function(x){mean(x, na.rm=T)})
+sapply(sData, function(x){mean(x$normHg, na.rm=T)})
 sapply(sData, function(x){median(x, na.rm=T)})
 
 
 rr <- factor(rep(names(sData), sapply(sData, length)), names(sData))
+d2<- data.frame(ppm=unlist(sData), River=rr)
 d2<- data.frame(ppm=unlist(sData), River=rr)
 r <- aov(ppm~River, data=d2)
 summary(r)
