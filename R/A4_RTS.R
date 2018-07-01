@@ -67,12 +67,13 @@ for(r in levels(data$River)){
   subData <- data[data$River==r,]
   a<- summary(glm(ppm~RTP, data=subData))
   sData[[r]] <- cbind(normHg=subData$ppm + (mm - subData$RTP) * a$coefficients[2, 1],
-                      subData[, c("River", "RTP", "STRD..LENGTH..mm.", "Season")])
+                      subData[, c("River", "RTP", "STRD..LENGTH..mm.", "d15N", "Season")])
   
 }
 
 data2<- do.call(rbind, sData)
 r <- aov(normHg ~ River + RTP + Season + STRD..LENGTH..mm., data=data2)
+r <- aov(normHg ~ River + d15N + Season + STRD..LENGTH..mm., data=data2)
 summary(r)
 TukeyHSD(r, "River")
 
